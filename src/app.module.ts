@@ -26,7 +26,7 @@ import { UserModule } from './user/user.module';
           database: config.get('DB'),
           autoLoadEntities: true,
           synchronize: true,
-          // ssl: true,
+          ssl: config.get('SSL'),
         };
       },
     }),
