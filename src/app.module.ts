@@ -26,6 +26,7 @@ import { configValidationSchema } from './config.schema';
           database: config.get('DB'),
           autoLoadEntities: true,
           synchronize: true,
+          ssl: true,
         };
       },
     }),
