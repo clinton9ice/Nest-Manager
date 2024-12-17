@@ -1,6 +1,7 @@
 import {
   IsEmail,
   IsNotEmpty,
+  IsOptional,
   IsString,
   Matches,
   MaxLength,
@@ -32,4 +33,13 @@ export class LoginCredentialDto {
   email: string;
   @IsNotEmpty()
   password: string;
+}
+
+export class UpdateUserDto {
+  @IsOptional()
+  @IsString()
+  username: string;
+  @IsOptional()
+  @IsEmail()
+  email: string;
 }

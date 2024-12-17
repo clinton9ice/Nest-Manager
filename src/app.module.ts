@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configValidationSchema } from './config.schema';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -11,7 +12,6 @@ import { configValidationSchema } from './config.schema';
       envFilePath: [`.env.stage.${process.env.STAGE}`],
       validationSchema: configValidationSchema,
     }),
-    TasksModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -26,11 +26,13 @@ import { configValidationSchema } from './config.schema';
           database: config.get('DB'),
           autoLoadEntities: true,
           synchronize: true,
-          ssl: true,
+          // ssl: true,
         };
       },
     }),
+    TasksModule,
     AuthModule,
+    UserModule,
   ],
   controllers: [],
   providers: [],

@@ -1,13 +1,15 @@
 import { DataSource, Repository } from 'typeorm';
 import { User } from './user.entity';
-import { AuthCredentialDto } from './dto/auth-credential.dto';
+import { AuthCredentialDto, UpdateUserDto } from './dto/auth-credential.dto';
 import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { UserContext } from './types/user.interface';
 
 @Injectable()
 export class UserRepository extends Repository<User> {
@@ -32,6 +34,27 @@ export class UserRepository extends Repository<User> {
       } else {
         throw new InternalServerErrorException();
       }
+    }
+  }
+  async getUserInfo(id: string): Promise<UserContext> {
+    try {
+      const userInfo = await this.findOne({ where: { id } });
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...rest } = userInfo;
+      return rest;
+    } catch (error) {
+      throw new NotFoundException('User not found');
+    }
+  }
+  async updateUserInfo(param: UpdateUserDto, user: User) {
+    if (user.email) {
+      const { email, username } = param;
+      const u_info = user;
+      u_info.email = email || user.email;
+      u_info.username = username || user.username;
+      await this.save(u_info);
+      return user;
     }
   }
 }

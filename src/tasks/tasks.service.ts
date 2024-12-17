@@ -12,11 +12,16 @@ export class TasksService {
   constructor(private taskRepo: TaskRepository) {}
 
   async getTaskById(id: string, user: User): Promise<TaskEntity> {
-    const task = await this.taskRepo.findOne({ where: { id, user } });
-    if (!task) {
+    try {
+      const task = await this.taskRepo.findOne({ where: { id, user } });
+      this.logger.log(`${user.username} successfully fetched task`);
+      if (!task) {
+        throw new NotFoundException('Task not found');
+      }
+      return task;
+    } catch (error) {
       throw new NotFoundException('Task not found');
     }
-    return task;
   }
   async getTasks(
     user: User,
@@ -41,10 +46,6 @@ export class TasksService {
       };
     }
   }
-  // async softDeleteTask(id: string, user: User) {
-  //   const task = await this.getTaskById(id, user);
-  //   this.taskRepo.extend({ is_deleted: true });
-  // }
 
   async updateTaskStatus(
     arg: { id: string; taskStatus: TaskStatus },

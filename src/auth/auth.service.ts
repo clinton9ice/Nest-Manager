@@ -2,6 +2,7 @@ import {
   HttpException,
   Injectable,
   Logger,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { UserRepository } from './user.repository';
@@ -47,4 +48,5 @@ export class AuthService {
 
     throw new HttpException(errorResponse, errorResponse.statusCode);
   }
+  async resetPassword() {}
 }
